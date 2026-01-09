@@ -46,17 +46,6 @@
             >
               <q-item-section class="col-5">
                 <img
-                  v-if="flipper.info?.hardware.color === '1'"
-                  src="~assets/flipper_black.svg"
-                  style="width: 100%"
-                />
-                <img
-                  v-else-if="flipper.info?.hardware.color === '3'"
-                  src="~assets/flipper_transparent.svg"
-                  style="width: 100%"
-                />
-                <img
-                  v-else
                   src="~assets/flipper_white.svg"
                   style="width: 100%"
                 />

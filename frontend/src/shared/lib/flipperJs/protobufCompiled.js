@@ -39,12 +39,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StartRequest.decode = function decode(reader, length) {
+        StartRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.StartRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.name = reader.string();
@@ -143,12 +145,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        LockStatusRequest.decode = function decode(reader, length) {
+        LockStatusRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.LockStatusRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -221,12 +225,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        LockStatusResponse.decode = function decode(reader, length) {
+        LockStatusResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.LockStatusResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.locked = reader.bool();
@@ -312,12 +318,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppExitRequest.decode = function decode(reader, length) {
+        AppExitRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppExitRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -390,12 +398,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppLoadFileRequest.decode = function decode(reader, length) {
+        AppLoadFileRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppLoadFileRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -488,12 +498,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppButtonPressRequest.decode = function decode(reader, length) {
+        AppButtonPressRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppButtonPressRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.args = reader.string();
@@ -592,12 +604,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppButtonReleaseRequest.decode = function decode(reader, length) {
+        AppButtonReleaseRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppButtonReleaseRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -673,12 +687,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppButtonPressReleaseRequest.decode = function decode(reader, length) {
+        AppButtonPressReleaseRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppButtonPressReleaseRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.args = reader.string();
@@ -788,12 +804,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        AppStateResponse.decode = function decode(reader, length) {
+        AppStateResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.AppStateResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.state = reader.int32();
@@ -898,12 +916,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetErrorRequest.decode = function decode(reader, length) {
+        GetErrorRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.GetErrorRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -979,12 +999,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetErrorResponse.decode = function decode(reader, length) {
+        GetErrorResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.GetErrorResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.code = reader.uint32();
@@ -1087,12 +1109,14 @@ export const PB_App = $root.PB_App = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DataExchangeRequest.decode = function decode(reader, length) {
+        DataExchangeRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_App.DataExchangeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.data = reader.bytes();
@@ -1194,12 +1218,14 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        IsLockedRequest.decode = function decode(reader, length) {
+        IsLockedRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.IsLockedRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -1268,12 +1294,14 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        UnlockRequest.decode = function decode(reader, length) {
+        UnlockRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.UnlockRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -1342,12 +1370,14 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StatusSubscribeRequest.decode = function decode(reader, length) {
+        StatusSubscribeRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.StatusSubscribeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -1416,12 +1446,14 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StatusUnsubscribeRequest.decode = function decode(reader, length) {
+        StatusUnsubscribeRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.StatusUnsubscribeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -1494,12 +1526,14 @@ export const PB_Desktop = $root.PB_Desktop = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Status.decode = function decode(reader, length) {
+        Status.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Desktop.Status();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.locked = reader.bool();
@@ -1622,12 +1656,14 @@ export const PB = $root.PB = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Empty.decode = function decode(reader, length) {
+        Empty.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.Empty();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -1696,12 +1732,14 @@ export const PB = $root.PB = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StopSession.decode = function decode(reader, length) {
+        StopSession.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.StopSession();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -2003,12 +2041,14 @@ export const PB = $root.PB = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Main.decode = function decode(reader, length) {
+        Main.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.Main();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.commandId = reader.uint32();
@@ -3989,12 +4029,14 @@ export const PB = $root.PB = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Region.decode = function decode(reader, length) {
+        Region.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.Region();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.countryCode = reader.bytes();
@@ -4131,12 +4173,14 @@ export const PB = $root.PB = (() => {
                 return this.encode(message, writer).ldelim();
             };
 
-            Band.decode = function decode(reader, length) {
+            Band.decode = function decode(reader, length, error) {
                 if (!(reader instanceof $Reader))
                     reader = $Reader.create(reader);
                 let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB.Region.Band();
                 while (reader.pos < end) {
                     let tag = reader.uint32();
+                    if (tag === error)
+                        break;
                     switch (tag >>> 3) {
                     case 1: {
                             message.start = reader.uint32();
@@ -4285,12 +4329,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        File.decode = function decode(reader, length) {
+        File.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.File();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.type = reader.int32();
@@ -4464,12 +4510,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        InfoRequest.decode = function decode(reader, length) {
+        InfoRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.InfoRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -4562,12 +4610,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        InfoResponse.decode = function decode(reader, length) {
+        InfoResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.InfoResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.totalSpace = reader.uint64();
@@ -4698,12 +4748,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        TimestampRequest.decode = function decode(reader, length) {
+        TimestampRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.TimestampRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -4793,12 +4845,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        TimestampResponse.decode = function decode(reader, length) {
+        TimestampResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.TimestampResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.timestamp = reader.uint32();
@@ -4888,12 +4942,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StatRequest.decode = function decode(reader, length) {
+        StatRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.StatRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -4983,12 +5039,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StatResponse.decode = function decode(reader, length) {
+        StatResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.StatResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.file = $root.PB_Storage.File.decode(reader, reader.uint32());
@@ -5089,12 +5147,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ListRequest.decode = function decode(reader, length) {
+        ListRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.ListRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -5211,12 +5271,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ListResponse.decode = function decode(reader, length) {
+        ListResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.ListResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         if (!(message.file && message.file.length))
@@ -5325,12 +5387,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ReadRequest.decode = function decode(reader, length) {
+        ReadRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.ReadRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -5420,12 +5484,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ReadResponse.decode = function decode(reader, length) {
+        ReadResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.ReadResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.file = $root.PB_Storage.File.decode(reader, reader.uint32());
@@ -5523,12 +5589,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        WriteRequest.decode = function decode(reader, length) {
+        WriteRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.WriteRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -5639,12 +5707,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DeleteRequest.decode = function decode(reader, length) {
+        DeleteRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.DeleteRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -5747,12 +5817,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        MkdirRequest.decode = function decode(reader, length) {
+        MkdirRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.MkdirRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -5842,12 +5914,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Md5sumRequest.decode = function decode(reader, length) {
+        Md5sumRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.Md5sumRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.path = reader.string();
@@ -5937,12 +6011,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        Md5sumResponse.decode = function decode(reader, length) {
+        Md5sumResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.Md5sumResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.md5sum = reader.string();
@@ -6035,12 +6111,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        RenameRequest.decode = function decode(reader, length) {
+        RenameRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.RenameRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.oldPath = reader.string();
@@ -6143,12 +6221,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        BackupCreateRequest.decode = function decode(reader, length) {
+        BackupCreateRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.BackupCreateRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.archivePath = reader.string();
@@ -6238,12 +6318,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        BackupRestoreRequest.decode = function decode(reader, length) {
+        BackupRestoreRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.BackupRestoreRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.archivePath = reader.string();
@@ -6336,12 +6418,14 @@ export const PB_Storage = $root.PB_Storage = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        TarExtractRequest.decode = function decode(reader, length) {
+        TarExtractRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Storage.TarExtractRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.tarPath = reader.string();
@@ -6451,12 +6535,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PingRequest.decode = function decode(reader, length) {
+        PingRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PingRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.data = reader.bytes();
@@ -6555,12 +6641,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PingResponse.decode = function decode(reader, length) {
+        PingResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PingResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.data = reader.bytes();
@@ -6659,12 +6747,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        RebootRequest.decode = function decode(reader, length) {
+        RebootRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.RebootRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.mode = reader.int32();
@@ -6782,12 +6872,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DeviceInfoRequest.decode = function decode(reader, length) {
+        DeviceInfoRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.DeviceInfoRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -6863,12 +6955,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DeviceInfoResponse.decode = function decode(reader, length) {
+        DeviceInfoResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.DeviceInfoResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.string();
@@ -6967,12 +7061,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        FactoryResetRequest.decode = function decode(reader, length) {
+        FactoryResetRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.FactoryResetRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -7041,12 +7137,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetDateTimeRequest.decode = function decode(reader, length) {
+        GetDateTimeRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.GetDateTimeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -7119,12 +7217,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetDateTimeResponse.decode = function decode(reader, length) {
+        GetDateTimeResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.GetDateTimeResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.datetime = $root.PB_System.DateTime.decode(reader, reader.uint32());
@@ -7219,12 +7319,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SetDateTimeRequest.decode = function decode(reader, length) {
+        SetDateTimeRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.SetDateTimeRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.datetime = $root.PB_System.DateTime.decode(reader, reader.uint32());
@@ -7337,12 +7439,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        DateTime.decode = function decode(reader, length) {
+        DateTime.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.DateTime();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.hour = reader.uint32();
@@ -7501,12 +7605,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PlayAudiovisualAlertRequest.decode = function decode(reader, length) {
+        PlayAudiovisualAlertRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PlayAudiovisualAlertRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -7575,12 +7681,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ProtobufVersionRequest.decode = function decode(reader, length) {
+        ProtobufVersionRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.ProtobufVersionRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -7656,12 +7764,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ProtobufVersionResponse.decode = function decode(reader, length) {
+        ProtobufVersionResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.ProtobufVersionResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.major = reader.uint32();
@@ -7764,12 +7874,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        UpdateRequest.decode = function decode(reader, length) {
+        UpdateRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.UpdateRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.updateManifest = reader.string();
@@ -7859,12 +7971,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        UpdateResponse.decode = function decode(reader, length) {
+        UpdateResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.UpdateResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.code = reader.int32();
@@ -8030,12 +8144,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PowerInfoRequest.decode = function decode(reader, length) {
+        PowerInfoRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PowerInfoRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -8111,12 +8227,14 @@ export const PB_System = $root.PB_System = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        PowerInfoResponse.decode = function decode(reader, length) {
+        PowerInfoResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_System.PowerInfoResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.string();
@@ -8259,12 +8377,14 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ScreenFrame.decode = function decode(reader, length) {
+        ScreenFrame.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.ScreenFrame();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.data = reader.bytes();
@@ -8401,12 +8521,14 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StartScreenStreamRequest.decode = function decode(reader, length) {
+        StartScreenStreamRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.StartScreenStreamRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -8475,12 +8597,14 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StopScreenStreamRequest.decode = function decode(reader, length) {
+        StopScreenStreamRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.StopScreenStreamRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -8556,12 +8680,14 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SendInputEventRequest.decode = function decode(reader, length) {
+        SendInputEventRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.SendInputEventRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.int32();
@@ -8740,12 +8866,14 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StartVirtualDisplayRequest.decode = function decode(reader, length) {
+        StartVirtualDisplayRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.StartVirtualDisplayRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.firstFrame = $root.PB_Gui.ScreenFrame.decode(reader, reader.uint32());
@@ -8849,12 +8977,14 @@ export const PB_Gui = $root.PB_Gui = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        StopVirtualDisplayRequest.decode = function decode(reader, length) {
+        StopVirtualDisplayRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gui.StopVirtualDisplayRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -8972,12 +9102,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SetPinMode.decode = function decode(reader, length) {
+        SetPinMode.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.SetPinMode();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
@@ -9151,12 +9283,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SetInputPull.decode = function decode(reader, length) {
+        SetInputPull.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.SetInputPull();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
@@ -9332,12 +9466,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetPinMode.decode = function decode(reader, length) {
+        GetPinMode.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.GetPinMode();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
@@ -9476,12 +9612,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetPinModeResponse.decode = function decode(reader, length) {
+        GetPinModeResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.GetPinModeResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.mode = reader.int32();
@@ -9590,12 +9728,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ReadPin.decode = function decode(reader, length) {
+        ReadPin.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.ReadPin();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
@@ -9734,12 +9874,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        ReadPinResponse.decode = function decode(reader, length) {
+        ReadPinResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.ReadPinResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 2: {
                         message.value = reader.uint32();
@@ -9832,12 +9974,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        WritePin.decode = function decode(reader, length) {
+        WritePin.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.WritePin();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.pin = reader.int32();
@@ -9985,12 +10129,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetOtgMode.decode = function decode(reader, length) {
+        GetOtgMode.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.GetOtgMode();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 default:
                     reader.skipType(tag & 7);
@@ -10063,12 +10209,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetOtgModeResponse.decode = function decode(reader, length) {
+        GetOtgModeResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.GetOtgModeResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.mode = reader.int32();
@@ -10177,12 +10325,14 @@ export const PB_Gpio = $root.PB_Gpio = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        SetOtgMode.decode = function decode(reader, length) {
+        SetOtgMode.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Gpio.SetOtgMode();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.mode = reader.int32();
@@ -10298,12 +10448,14 @@ export const PB_Property = $root.PB_Property = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetRequest.decode = function decode(reader, length) {
+        GetRequest.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Property.GetRequest();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.string();
@@ -10396,12 +10548,14 @@ export const PB_Property = $root.PB_Property = (() => {
             return this.encode(message, writer).ldelim();
         };
 
-        GetResponse.decode = function decode(reader, length) {
+        GetResponse.decode = function decode(reader, length, error) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
             let end = length === undefined ? reader.len : reader.pos + length, message = new $root.PB_Property.GetResponse();
             while (reader.pos < end) {
                 let tag = reader.uint32();
+                if (tag === error)
+                    break;
                 switch (tag >>> 3) {
                 case 1: {
                         message.key = reader.string();

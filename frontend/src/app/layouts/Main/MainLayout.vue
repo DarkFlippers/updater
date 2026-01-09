@@ -87,10 +87,7 @@
           @onFindMicroSd="flipperStore.findMicroSd"
         />
       </q-dialog>
-      <AppOutdatedFirmwareDialog
-        v-model="appsStore.dialogs.outdatedFirmwareDialog"
-        :persistent="appsStore.dialogs.outdatedFirmwareDialogPersistent"
-      />
+
       <FlipperConnectFlipperDialog
         v-model="flipperStore.dialogs.connectFlipper"
       >
@@ -142,59 +139,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-const route = useRoute()
-const router = useRouter()
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+const route = useRoute();
+const router = useRouter();
 
-import { AppHeader, AppDrawer } from './components'
-import { Loading } from 'shared/components/Loading'
+import { AppHeader, AppDrawer } from './components';
+import { Loading } from 'shared/components/Loading';
 
-import {
-  FlipperMicroSDCard,
-  FlipperConnectFlipperDialog,
-  FlipperMobileDetectedDialog,
-  FlipperUnsupportedBrowserDialog,
-  FlipperDownloadPathDialog,
-  FlipperRecoveryDialog,
-  FlipperBusyDialog,
-  FlipperDfuItem
-} from 'entity/Flipper'
-import { AppsModel, AppOutdatedFirmwareDialog } from 'entity/Apps'
-const appsStore = AppsModel.useAppsStore()
+import { FlipperMicroSDCard, FlipperConnectFlipperDialog, FlipperMobileDetectedDialog, FlipperUnsupportedBrowserDialog, FlipperDownloadPathDialog, FlipperRecoveryDialog, FlipperBusyDialog, FlipperDfuItem } from 'entity/Flipper';
+import { FlipperConnectWebBtn, FlipperLogCard, FlipperExpandView } from 'features/Flipper';
+import { FlipperModel } from 'entity/Flipper';
+const flipperStore = FlipperModel.useFlipperStore();
 
-import {
-  FlipperConnectWebBtn,
-  FlipperLogCard,
-  FlipperExpandView
-} from 'features/Flipper'
-import { FlipperModel } from 'entity/Flipper'
-const flipperStore = FlipperModel.useFlipperStore()
+defineOptions({ name: 'MainLayout' });
 
-defineOptions({
-  name: 'MainLayout'
-})
-
-const leftDrawerOpen = ref(false)
-
-const toggleLeftDrawer = () => {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+const leftDrawerOpen = ref(false);
+const toggleLeftDrawer = () => leftDrawerOpen.value = !leftDrawerOpen.value;
 
 onMounted(async () => {
-  if (localStorage.getItem('autoReconnect') !== 'false') {
-    flipperStore.flags.autoReconnect = true
-  } else {
-    flipperStore.flags.autoReconnect = false
-  }
+    if (localStorage.getItem('autoReconnect') !== 'false') flipperStore.flags.autoReconnect = true;
+    else flipperStore.flags.autoReconnect = false;
 
-  if (!flipperStore.isElectron && flipperStore.flags.autoReconnect) {
-    flipperStore.onAutoReconnect()
-  }
-})
+    if (!flipperStore.isElectron && flipperStore.flags.autoReconnect) flipperStore.onAutoReconnect();
+});
 
 const goToDeviceControl = () => {
-  flipperStore.expandView = true
-  router.push({ name: 'Device' })
+    flipperStore.expandView = true;
+    router.push({ name: 'Device' });
 }
 </script>

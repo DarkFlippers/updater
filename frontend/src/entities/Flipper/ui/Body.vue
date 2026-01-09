@@ -62,14 +62,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits(['expandView'])
 
 const flipperBodyClass = computed(() => {
-  switch (props.flipperColor) {
-    case '1':
-      return 'body-black'
-    case '3':
-      return 'body-transparent'
-    default:
-      return 'body-white'
-  }
+  return 'body-white'
 })
 
 const rotationCalculation = computed(() => {

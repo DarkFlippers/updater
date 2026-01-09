@@ -1,3 +1,5 @@
-# lab.flipper.net
+# web.unleashedflip.com
 
-Web platform for your Flipper
+Web updater for Unleashed Firmware
+
+Based on [lab.flipper.net](https://github.com/flipperdevices/lab.flipper.net)

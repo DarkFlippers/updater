@@ -7,7 +7,6 @@ import { FlipperWeb, FlipperElectron } from 'shared/lib/flipperJs'
 import { showNotif } from 'shared/lib/utils/useShowNotif'
 import { logger, type LogLevel } from 'shared/lib/utils/useLog'
 
-import { AppsModel } from 'entity/Apps'
 import {
   FlipperInfo,
   PulseFile,
@@ -35,7 +34,7 @@ export const useFlipperStore = defineStore('flipper', () => {
   const route = useRoute()
   const router = useRouter()
 
-  const appsStore = AppsModel.useAppsStore()
+  //const appsStore = AppsModel.useAppsStore()
 
   const flags = reactive({
     connected: computed(() => flipper.value?.connected),
@@ -130,7 +129,7 @@ export const useFlipperStore = defineStore('flipper', () => {
           const unbind = flipper.value?.emitter.on(
             'disconnect',
             (e: { isUserAction: boolean }) => {
-              appsStore.onClearInstalledAppsList()
+              //appsStore.onClearInstalledAppsList()
 
               if (flags.autoReconnect && !e.isUserAction) {
                 onAutoReconnect()
@@ -168,7 +167,7 @@ export const useFlipperStore = defineStore('flipper', () => {
         isUserAction
       })
       // flags.connected = false
-      appsStore.onClearInstalledAppsList()
+      //appsStore.onClearInstalledAppsList()
     }
   }
 
@@ -245,7 +244,7 @@ export const useFlipperStore = defineStore('flipper', () => {
     if (flipper.value) {
       // flipper.value.flipperReady = false
       await flipper.value.disconnect()
-      appsStore.onClearInstalledAppsList()
+      //appsStore.onClearInstalledAppsList()
       oldFlipper.value = unref(flipper.value)
     }
 
@@ -343,7 +342,7 @@ export const useFlipperStore = defineStore('flipper', () => {
 
               if (flipper.value?.name === bridgeFlipper.name) {
                 flipper.value.disconnect()
-                appsStore.onClearInstalledAppsList()
+                //appsStore.onClearInstalledAppsList()
 
                 if (!flags.updateInProgress) {
                   flipper.value = undefined

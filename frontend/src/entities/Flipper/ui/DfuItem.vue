@@ -1,17 +1,7 @@
 <template>
   <q-item class="row rounded-borders">
     <q-item-section class="col-5">
-      <img
-        v-if="flipper.info?.color === 1"
-        src="~assets/flipper_black.svg"
-        style="width: 100%"
-      />
-      <img
-        v-else-if="flipper.info?.color === 3"
-        src="~assets/flipper_transparent.svg"
-        style="width: 100%"
-      />
-      <img v-else src="~assets/flipper_white.svg" style="width: 100%" />
+      <img src="~assets/flipper_white.svg" style="width: 100%" />
     </q-item-section>
     <q-item-section class="col-5 q-pl-md">
       <div>

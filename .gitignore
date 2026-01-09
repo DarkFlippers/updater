@@ -36,3 +36,5 @@ frontend/yarn-error.log*
 # Lock files
 frontend/*-lock.json
 frontend/*.lock
+
+.legacytoberemoved/

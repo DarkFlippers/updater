@@ -37,6 +37,8 @@ const workerOpenPort = async ({ reopen = false } = {}) => {
 
       if (workerPort) {
         if (workerPort.readable) {
+          // eslint-disable-next-line
+          // @ts-ignore bun specific
           postMessage(
             {
               message: 'getReadableStream',
@@ -48,6 +50,8 @@ const workerOpenPort = async ({ reopen = false } = {}) => {
           )
         }
         if (workerPort.writable) {
+          // eslint-disable-next-line
+          // @ts-ignore bun specific
           postMessage(
             {
               message: 'getWritableStream',

@@ -1,27 +1,16 @@
 {
-  "name": "lab.flipper.net",
-  "version": "0.4.9",
-  "description": "Web platform for your Flipper",
-  "productName": "Flipper Lab",
+  "name": "web.unleashedflip.com",
+  "version": "0.1.0",
+  "description": "Web updater for Unleashed Firmware",
+  "productName": "Unleashed Firmware Web Updater",
   "repository": {
     "type": "git",
-    "url": "https://github.com/flipperdevices/lab.flipper.net.git"
+    "url": "https://github.com/DarkFlippers/updater.git"
   },
   "author": {
-    "name": "Flipper Devices Inc.",
-    "url": "https://flipperdevices.com/",
-    "email": "support@flipperdevices.com"
+    "name": "Unleashed Firmware Team",
+    "url": "https://github.com/DarkFlippers"
   },
-  "maintainers": [
-    {
-      "name": "Slipn3r",
-      "email": "61992469+Slipn3r@users.noreply.github.com"
-    },
-    {
-      "name": "Maxim Lyubimov",
-      "email": "m.lyubimov@flipperdevices.com"
-    }
-  ],
   "type": "module",
   "private": true,
   "scripts": {

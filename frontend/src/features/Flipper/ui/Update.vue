@@ -18,20 +18,6 @@
       />
     </div>
     <template v-if="ableToUpdate && flipperStore.info?.storage.sdcard?.status">
-      <template v-if="outdated !== undefined">
-        <p class="q-mb-sm">
-          <span v-if="outdated">
-            Your firmware is out of date, newest release is
-            {{ getChannel('release')?.versions[0]!.version }}.
-          </span>
-          <span v-else-if="aheadOfRelease">
-            Your firmware is ahead of current release.
-          </span>
-          <span v-else-if="flipperStore.info.firmware.version !== 'unknown'">
-            Your firmware is up to date.
-          </span>
-        </p>
-      </template>
       <p v-if="getChannel('custom')">
         Detected custom firmware
         <b v-if="getChannel('custom')!.title !== 'Custom'">
@@ -88,7 +74,7 @@
               unelevated
               color="positive"
               padding="12px 30px"
-              >{{ getTextButton }}</q-btn
+              >Install</q-btn
             >
           </template>
           <template v-else>
@@ -170,7 +156,7 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model="changelogDialog">
+    <q-dialog v-model="changelogDialog" class="dialog-wide">
       <q-layout view="HHH lpr FFF" container class="bg-white">
         <q-header class="column flex-center q-py-sm bg-white text-black" reveal>
           <p class="q-mb-none text-h5 text-bold">What's New</p>
@@ -183,7 +169,6 @@
           <q-page padding>
             <q-markdown
               no-heading-anchor-links
-              no-html
               no-linkify
               no-typographer
               :src="fwModel.changelog"
@@ -199,7 +184,7 @@
             color="positive"
             padding="12px 30px"
             unelevated
-            >{{ getTextButton }}</q-btn
+            >Install</q-btn
           >
         </q-footer>
       </q-layout>
@@ -208,604 +193,363 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import semver from 'semver'
-import asyncSleep from 'simple-async-sleep'
+import { ref, onMounted } from 'vue';
+import asyncSleep from 'simple-async-sleep';
 
-import { PB } from 'shared/lib/flipperJs/protobufCompiled'
-import { unpack } from 'shared/lib/utils/operation'
+import { unpack } from 'shared/lib/utils/operation';
 
-import { showNotif } from 'shared/lib/utils/useShowNotif'
-import { logger } from 'shared/lib/utils/useLog'
-import { rpcErrorHandler } from 'shared/lib/utils/useRpcUtils'
-import { replaceGitHubLinksInMarkdown } from 'shared/lib/utils/useFormatUrl'
+import { showNotif } from 'shared/lib/utils/useShowNotif';
+import { logger } from 'shared/lib/utils/useLog';
+import { rpcErrorHandler } from 'shared/lib/utils/useRpcUtils';
+import { replaceGitHubLinksInMarkdown } from 'shared/lib/utils/useFormatUrl';
 
-import { ProgressBar } from 'shared/components/ProgressBar'
-import { FlipperModel, FlipperApi } from 'entity/Flipper'
-const flipperStore = FlipperModel.useFlipperStore()
-const { fetchChannels, fetchRegions, fetchFirmware } = FlipperApi
+import { ProgressBar } from 'shared/components/ProgressBar';
+import { FlipperModel, FlipperApi } from 'entity/Flipper';
+const flipperStore = FlipperModel.useFlipperStore();
+const { fetchChannels, fetchFirmware } = FlipperApi;
 
-const componentName = 'FlipperUpdate'
+const componentName = 'FlipperUpdate';
 
-const outdated = ref<boolean | undefined>(false)
-const ableToUpdate = ref(true)
-const aheadOfRelease = ref(false)
+const ableToUpdate = ref(true);
 
-const installFromFile = ref(true)
-const uploadedFile = ref<File>()
-const uploadPopup = ref(false)
-const changelogDialog = ref(false)
+const installFromFile = ref(true);
+const uploadedFile = ref<File>();
+const uploadPopup = ref(false);
+const changelogDialog = ref(false);
 
-const overrideDevRegion = ref(false)
-const updateError = ref(false)
+const updateError = ref(false);
 
-const channels = ref<FlipperModel.Channel[]>([])
-const getChannel = (channelId: string) => {
-  if (channels.value.length) {
-    return channels.value.find((channel) => channel.id === channelId)
-  }
-
-  return undefined
-}
-const isTgzCustomFile = ref(false)
-const isTargetCustomFile = ref(false)
+const channels = ref<FlipperModel.Channel[]>([]);
+const getChannel = (channelId: string) => channels.value.length
+    ? channels.value.find(channel => channel.id === channelId)
+    : undefined;
+const isTgzCustomFile = ref(false);
+const isTargetCustomFile = ref(false);
 
 const fwOptions = ref<FlipperModel.FwOptions>({
-  release: {
-    label: 'Release',
-    selectLabel: 'Release',
-    selectDescription: 'Stable release (recommended)',
-    value: 'release',
-    version: '',
-    changelog: '',
-    color: 'positive'
-  },
-  rc: {
-    label: 'RC',
-    selectLabel: 'Release-Candidate',
-    selectDescription: 'Pre-release under testing',
-    value: 'release-candidate',
-    version: '',
-    changelog: '',
-    color: 'accent'
-  },
-  dev: {
-    label: 'Dev',
-    selectLabel: 'Development',
-    selectDescription: 'Daily unstable build, lots of bugs',
-    value: 'development',
-    version: '',
-    changelog: '',
-    color: 'negative'
-  }
-})
-const fwModel = ref(fwOptions.value.release)
+    release: {
+        label: 'Release',
+        selectLabel: 'Release',
+        selectDescription: 'Stable release (recommended)',
+        value: 'release',
+        version: '',
+        changelog: '',
+        color: 'positive'
+    },
+    dev: {
+        label: 'Dev',
+        selectLabel: 'Development',
+        selectDescription: 'Pre release builds, might contain bugs',
+        value: 'development',
+        version: '',
+        changelog: '',
+        color: 'negative'
+    }
+});
+const fwModel = ref(fwOptions.value.release);
 
-const emit = defineEmits<{ (event: 'updateInProgress'): Promise<void> }>()
+const emit = defineEmits<{ (event: 'updateInProgress'): Promise<void> }>();
 
 onMounted(async () => {
-  channels.value = await fetchChannels().catch((error) => {
-    showNotif({
-      message: 'Unable to load firmware channels from the build server.',
-      color: 'negative',
-      actions: [
-        {
-          label: 'Reload',
-          color: 'white',
-          handler: () => {
-            location.reload()
-          }
+    channels.value = await fetchChannels().catch((error) => {
+        showNotif({
+            message: 'Unable to load firmware channels from the build server.',
+            color: 'negative',
+            actions: [
+                {
+                    label: 'Reload',
+                    color: 'white',
+                    handler: () => location.reload()
+                }
+            ]
+        });
+        logger.error({
+            context: componentName,
+            message: 'failed to fetch update channels'
+        });
+        throw error;
+    });
+
+    if (channels.value.length) {
+        fwOptions.value.release.version = getChannel('release')?.versions[0]!.version || '';
+        // fwOptions.value.rc.version = getChannel('release-candidate')?.versions[0]!.version || '';
+        fwOptions.value.dev.version = getChannel('development')?.versions[0]!.version || '';
+
+        fwOptions.value.release.changelog = replaceGitHubLinksInMarkdown(getChannel('release')?.versions[0]!.changelog || '');
+        // fwOptions.value.rc.changelog = replaceGitHubLinksInMarkdown(getChannel('release-candidate')?.versions[0]!.changelog || '');
+        fwOptions.value.dev.changelog = replaceGitHubLinksInMarkdown(getChannel('development')?.versions[0]!.changelog || '');
+
+        const customChannel = getChannel('custom');
+        const customFile = customChannel?.versions[0]?.files.find(_file => _file.url.endsWith('tgz'));
+        if (customFile) {
+            isTgzCustomFile.value = true;
+
+            if (customFile.target === flipperStore.target) isTargetCustomFile.value = true;
+            else isTargetCustomFile.value = false;
         }
-      ]
-    })
-    logger.error({
-      context: componentName,
-      message: 'failed to fetch update channels'
-    })
-    throw error
-  })
+        else isTgzCustomFile.value = false;
+        if (customChannel && customFile && isTgzCustomFile.value && isTargetCustomFile.value) {
+            fwOptions.value.custom = {
+                label: customChannel.title,
+                selectLabel: customChannel.title,
+                selectDescription: '',
+                value: 'custom',
+                version: customChannel.versions[0]!.version,
+                changelog: '',
+                color: 'dark'
+            }
 
-  if (channels.value.length) {
-    fwOptions.value.release.version =
-      getChannel('release')?.versions[0]!.version || ''
-    fwOptions.value.rc.version =
-      getChannel('release-candidate')?.versions[0]!.version || ''
-    fwOptions.value.dev.version =
-      getChannel('development')?.versions[0]!.version || ''
-
-    fwOptions.value.release.changelog = replaceGitHubLinksInMarkdown(
-      getChannel('release')?.versions[0]!.changelog || ''
-    )
-    fwOptions.value.rc.changelog = replaceGitHubLinksInMarkdown(
-      getChannel('release-candidate')?.versions[0]!.changelog || ''
-    )
-    fwOptions.value.dev.changelog = replaceGitHubLinksInMarkdown(
-      getChannel('development')?.versions[0]!.changelog || ''
-    )
-
-    const customChannel = getChannel('custom')
-    const customFile = customChannel?.versions[0]?.files.find((_file) =>
-      _file.url.endsWith('tgz')
-    )
-    if (customFile) {
-      isTgzCustomFile.value = true
-
-      if (customFile.target === flipperStore.target) {
-        isTargetCustomFile.value = true
-      } else {
-        isTargetCustomFile.value = false
-      }
-    } else {
-      isTgzCustomFile.value = false
-    }
-    if (
-      customChannel &&
-      customFile &&
-      isTgzCustomFile.value &&
-      isTargetCustomFile.value
-    ) {
-      fwOptions.value.custom = {
-        label: customChannel.title,
-        selectLabel: customChannel.title,
-        selectDescription: '',
-        value: 'custom',
-        version: customChannel.versions[0]!.version,
-        changelog: '',
-        color: 'dark'
-      }
-
-      fwModel.value = fwOptions.value.custom
-    }
-  }
-
-  compareVersions()
-
-  if (
-    new URLSearchParams(location.search).get('overrideDevRegion') === 'true'
-  ) {
-    overrideDevRegion.value = true
-  }
-})
-
-const compareVersions = () => {
-  if (
-    semver.lt(
-      flipperStore.info?.protobuf.version.major +
-        '.' +
-        flipperStore.info?.protobuf.version.minor +
-        '.0',
-      '0.6.0'
-    )
-  ) {
-    ableToUpdate.value = false
-  }
-  if (flipperStore.info?.firmware.version) {
-    if (
-      flipperStore.info.firmware.version !== 'unknown' &&
-      semver.valid(flipperStore.info.firmware.version)
-    ) {
-      const releaseVersion = getChannel('release')?.versions[0]!.version
-
-      if (releaseVersion) {
-        if (semver.eq(flipperStore.info.firmware.version, releaseVersion)) {
-          outdated.value = false
-        } else if (
-          semver.gt(flipperStore.info.firmware.version, releaseVersion)
-        ) {
-          outdated.value = false
-          aheadOfRelease.value = true
-        } else {
-          outdated.value = true
+            fwModel.value = fwOptions.value.custom;
         }
-      } else {
-        outdated.value = true
-      }
-    } else {
-      outdated.value = undefined
     }
-  }
-}
-
-const getTextButton = computed(() => {
-  if (fwModel.value.version === flipperStore.info?.firmware.version) {
-    return 'Reinstall'
-  }
-
-  if (outdated.value) {
-    return 'Update'
-  }
-
-  return 'Install'
-})
+});
 
 const update = async (fromFile = false) => {
-  updateStage.value = ''
+    updateStage.value = '';
 
-  if (!flipperStore.info?.storage.sdcard?.status.isInstalled) {
-    flipperStore.dialogs.microSDcardMissing = true
-    return
-  }
-
-  flipperStore.onUpdateStage('start')
-
-  if (fromFile) {
-    if (!uploadedFile.value) {
-      updateError.value = true
-      flipperStore.onUpdateStage('end')
-      updateStage.value = 'No file selected'
-      throw new Error(updateStage.value)
-    } else if (!uploadedFile.value.name.endsWith('.tgz')) {
-      updateError.value = true
-      flipperStore.onUpdateStage('end')
-      updateStage.value = 'Wrong file format'
-      throw new Error(updateStage.value)
+    if (!flipperStore.info?.storage.sdcard?.status.isInstalled) {
+        flipperStore.dialogs.microSDcardMissing = true;
+        return;
     }
-    logger.info({
-      context: componentName,
-      message: 'Uploading firmware from file'
-    })
-  }
 
-  await emit('updateInProgress')
-  await loadFirmware().catch((error: Error) => {
-    updateError.value = true
-    updateStage.value = error.message || error.toString()
+    flipperStore.onUpdateStage('start');
 
-    flipperStore.onUpdateStage('end')
+    if (fromFile) {
+        if (!uploadedFile.value) {
+            updateError.value = true;
+            flipperStore.onUpdateStage('end');
+            updateStage.value = 'No file selected';
+            throw new Error(updateStage.value);
+        } else if (!uploadedFile.value.name.endsWith('.tgz')) {
+            updateError.value = true;
+            flipperStore.onUpdateStage('end');
+            updateStage.value = 'Wrong file format';
+            throw new Error(updateStage.value);
+        }
+        logger.info({
+            context: componentName,
+            message: 'Uploading firmware from file'
+        });
+    }
 
-    throw error
-  })
+    await emit('updateInProgress');
+    await loadFirmware().catch((error: Error) => {
+        updateError.value = true;
+        updateStage.value = error.message || error.toString();
+
+        flipperStore.onUpdateStage('end');
+
+        throw error;
+    });
 }
 
-const updateStage = ref('')
+const updateStage = ref('');
 const write = ref({
-  filename: '',
-  progress: 0
-})
+    filename: '',
+    progress: 0
+});
 const loadFirmware = async () => {
-  updateStage.value = 'Loading firmware bundle...'
+    updateStage.value = 'Loading firmware bundle...'
+    if (updateError.value) return;
 
-  if (flipperStore.info?.hardware.region !== '0' || overrideDevRegion.value) {
-    const regions: FlipperModel.Regions = await fetchRegions().catch(
-      (error) => {
-        showNotif({
-          message: 'Failed to fetch regional update information',
-          color: 'negative',
-          actions: [
-            {
-              label: 'Reload',
-              color: 'white',
-              handler: () => {
-                location.reload()
-              }
-            }
-          ]
-        })
-        logger.error({
-          context: componentName,
-          message: `Failed to fetch regional update information: ${error.toString()}`
-        })
-        throw error
-      }
-    )
+    const channel = getChannel(fwModel.value.value);
 
-    let bands
-    if (regions.countries[regions.country]) {
-      bands = regions.countries[regions.country]!.map((e) => regions.bands[e])
-    } else {
-      bands = regions.default.map((e) => regions.bands[e])
-      regions.country = 'JP'
-    }
-    const options: {
-      countryCode: string | Uint8Array
-      bands: InstanceType<typeof PB.Region.Band>[]
-    } = {
-      countryCode: regions.country,
-      bands: []
-    }
-
-    for (const band of bands) {
-      const bandOptions = {
-        start: band!.start,
-        end: band!.end,
-        powerLimit: band!.max_power,
-        dutyCycle: band!.duty_cycle
-      }
-      const message = PB.Region.Band.create(bandOptions)
-      options.bands.push(message)
-    }
-
-    if (updateError.value) {
-      return
-    }
-
-    options.countryCode = new TextEncoder().encode(regions.country)
-    const message = PB.Region.create(options)
-    const encoded = new Uint8Array(
-      PB.Region.encodeDelimited(message).finish()
-    ).slice(1)
-
-    await flipperStore.flipper
-      ?.RPC('storageWrite', {
-        path: '/int/.region_data',
-        buffer: encoded
-      })
-      .catch((error: Error) => {
-        const command = 'storageWrite'
-        rpcErrorHandler({ componentName, error, command })
-
-        throw new Error(
-          `${componentName}: RPC error in command '${command}': ${error.toString()}`
-        )
-      })
-  }
-
-  if (updateError.value) {
-    return
-  }
-
-  const channel = getChannel(fwModel.value.value)
-
-  if (uploadedFile.value || channel) {
-    let files
-    if (uploadedFile.value) {
-      const buffer = await uploadedFile.value.arrayBuffer()
-      files = await unpack(buffer).then((value: object) => {
-        logger.debug({
-          context: componentName,
-          message: 'Unpacked firmware'
-        })
-        return value
-      })
-    } else {
-      const file = channel?.versions[0]!.files.find(
-        (_file) =>
-          _file.target === flipperStore.target && _file.type === 'update_tgz'
-      )
-
-      if (file) {
-        files = await fetchFirmware(file.url)
-          .then((value) => {
-            logger.debug({
-              context: componentName,
-              message: `Downloaded firmware from ${file.url}`
-            })
-            return value
-          })
-          .catch((error: Error) => {
-            updateError.value = true
-            updateStage.value = error.toString()
-            showNotif({
-              message: 'Failed to fetch firmware: ' + error.toString(),
-              color: 'negative',
-              actions: [
-                {
-                  label: 'Reload',
-                  color: 'white',
-                  handler: () => {
-                    location.reload()
-                  }
-                }
-              ]
-            })
-
-            const message = `${componentName}: Failed to fetch firmware: ${error.toString()}`
-            logger.error({
-              context: componentName,
-              message
-            })
-            throw new Error(message)
-          })
-      }
-    }
-
-    updateStage.value = 'Loading firmware files'
-
-    if (updateError.value) {
-      return
-    }
-
-    let path = '/ext/update/'
-    const updateDir = await flipperStore.flipper
-      ?.RPC('storageStat', { path: '/ext/update' })
-      .catch(async (error: Error) => {
-        if (error.toString() !== 'ERROR_STORAGE_NOT_EXIST') {
-          const command = 'storageStat'
-          rpcErrorHandler({
-            componentName,
-            error,
-            command
-          })
-
-          throw new Error(
-            `${componentName}: RPC error in command '${command}': ${error.toString()}`
-          )
+    if (uploadedFile.value || channel) {
+        let files;
+        if (uploadedFile.value) {
+            const buffer = await uploadedFile.value.arrayBuffer()
+            files = await unpack(buffer).then((value: object) => {
+                logger.debug({
+                    context: componentName,
+                    message: 'Unpacked firmware'
+                });
+                return value;
+            });
         } else {
-          logger.debug({
-            context: componentName,
-            message: 'Storage /ext/update not exist'
-          })
-        }
-      })
+            const file = channel?.versions[0]!.files.find(_file => _file.target === flipperStore.target && _file.type === 'update_tgz');
 
-    if (!updateDir) {
-      await flipperStore.flipper
-        ?.RPC('storageMkdir', { path: '/ext/update' })
-        .then(() =>
-          logger.debug({
-            context: componentName,
-            message: 'storageMkdir: /ext/update'
-          })
-        )
-        .catch((error: Error) => {
-          const command = 'storageMkdir'
-          rpcErrorHandler({ componentName, error, command })
+            if (file) {
+                files = await fetchFirmware(file.url).then((value) => {
+                    logger.debug({
+                        context: componentName,
+                        message: `Downloaded firmware from ${file.url}`
+                    });
+                    return value;
+                }).catch((error: Error) => {
+                    updateError.value = true;
+                    updateStage.value = error.toString();
+                    showNotif({
+                        message: 'Failed to fetch firmware: ' + error.toString(),
+                        color: 'negative',
+                        actions: [
+                            {
+                                label: 'Reload',
+                                color: 'white',
+                                handler: () => location.reload()
+                            }
+                        ]
+                    });
 
-          throw new Error(
-            `${componentName}: RPC error in command '${command}': ${error.toString()}`
-          )
-        })
-    }
-
-    for (const file of files) {
-      if (updateError.value) {
-        return
-      }
-      if (file.size === 0) {
-        path = '/ext/update/' + file.name
-        if (file.name.endsWith('/')) {
-          path = path.slice(0, -1)
+                    const message = `${componentName}: Failed to fetch firmware: ${error.toString()}`;
+                    logger.error({
+                        context: componentName,
+                         message
+                    });
+                    throw new Error(message);
+                });
+            }
         }
 
-        const updateVersionDir = await flipperStore.flipper
-          ?.RPC('storageStat', { path })
-          .catch(async (error: Error) => {
+        updateStage.value = 'Loading firmware files';
+
+        if (updateError.value) return;
+
+        let path = '/ext/update/';
+        const updateDir = await flipperStore.flipper?.RPC('storageStat', { path: '/ext/update' }).catch(async (error: Error) => {
             if (error.toString() !== 'ERROR_STORAGE_NOT_EXIST') {
-              const command = 'storageStat'
-              rpcErrorHandler({
-                componentName,
-                error,
-                command
-              })
+                const command = 'storageStat';
+                rpcErrorHandler({ componentName, error, command });
 
-              throw new Error(
-                `${componentName}: RPC error in command '${command}': ${error.toString()}`
-              )
-            } else {
-              logger.debug({
+                throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
+            } else logger.debug({
                 context: componentName,
                 message: 'Storage /ext/update not exist'
-              })
-            }
-          })
+            });
+        });
 
-        if (!updateVersionDir) {
-          await flipperStore.flipper
-            ?.RPC('storageMkdir', { path })
-            .then(() =>
-              logger.debug({
+        if (!updateDir) {
+            await flipperStore.flipper?.RPC('storageMkdir', { path: '/ext/update' })
+            .then(() => logger.debug({
                 context: componentName,
-                message: `storageMkdir: ${path}`
-              })
-            )
-            .catch((error: Error) => {
-              const command = 'storageMkdir'
-              rpcErrorHandler({ componentName, error, command })
+                message: 'storageMkdir: /ext/update'
+            })).catch((error: Error) => {
+                const command = 'storageMkdir';
+                rpcErrorHandler({ componentName, error, command });
 
-              throw new Error(
-                `${componentName}: RPC error in command '${command}': ${error.toString()}`
-              )
-            })
+                throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
+            });
         }
-      } else {
-        write.value.filename = file.name.slice(file.name.lastIndexOf('/') + 1)
-        const unbind = flipperStore.flipper?.emitter.on(
-          'storageWriteRequest/progress',
-          (e: { progress: number; total: number }) => {
-            if (!flipperStore.flipper?.connected) {
-              throw new Error(
-                `Flipper ${flipperStore.flipper?.name} not connected`
-              )
+
+        for (const file of files) {
+            if (updateError.value) return;
+            if (file.size === 0) {
+                path = '/ext/update/' + file.name;
+                if (file.name.endsWith('/')) path = path.slice(0, -1);
+
+                const updateVersionDir = await flipperStore.flipper?.RPC('storageStat', { path }).catch(async (error: Error) => {
+                    if (error.toString() !== 'ERROR_STORAGE_NOT_EXIST') {
+                        const command = 'storageStat';
+                        rpcErrorHandler({ componentName, error, command });
+
+                        throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
+                    } else logger.debug({
+                        context: componentName,
+                        message: 'Storage /ext/update not exist'
+                    });
+                });
+
+                if (!updateVersionDir) {
+                    await flipperStore.flipper?.RPC('storageMkdir', { path }).then(() =>
+                        logger.debug({
+                            context: componentName,
+                            message: `storageMkdir: ${path}`
+                        })
+                    ).catch((error: Error) => {
+                        const command = 'storageMkdir';
+                        rpcErrorHandler({ componentName, error, command });
+
+                        throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
+                    });
+                }
+            } else {
+                write.value.filename = file.name.slice(file.name.lastIndexOf('/') + 1);
+                const unbind = flipperStore.flipper?.emitter.on(
+                    'storageWriteRequest/progress',
+                    (e: { progress: number; total: number }) => {
+                        if (!flipperStore.flipper?.connected) throw new Error(`Flipper ${flipperStore.flipper?.name} not connected`);
+
+                        write.value.progress = e.progress / e.total;
+                    }
+                );
+                await flipperStore.flipper?.RPC('storageWrite', {
+                    path: '/ext/update/' + file.name,
+                    buffer: file.buffer
+                }).then(() =>
+                    logger.debug({
+                        context: componentName,
+                        message: `storageWrite: /ext/update/${file.name}`
+                    })
+                ).catch((error: Error) => {
+                    const command = 'storageWrite';
+                    rpcErrorHandler({ componentName, error, command });
+
+                    throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
+                });
+
+                if (unbind) unbind();
             }
+            await asyncSleep(300);
+        }
 
-            write.value.progress = e.progress / e.total
-          }
-        )
-        await flipperStore.flipper
-          ?.RPC('storageWrite', {
-            path: '/ext/update/' + file.name,
-            buffer: file.buffer
-          })
-          .then(() =>
+        write.value.filename = '';
+        write.value.progress = 0;
+
+        updateStage.value = 'Loading manifest...';
+
+        if (updateError.value) return;
+
+        await flipperStore.flipper?.RPC('systemUpdate', { path: path + '/update.fuf' }).then(() =>
             logger.debug({
-              context: componentName,
-              message: `storageWrite: /ext/update/${file.name}`
+                context: componentName,
+                message: 'systemUpdate: OK'
             })
-          )
-          .catch((error: Error) => {
-            const command = 'storageWrite'
-            rpcErrorHandler({ componentName, error, command })
+        ).catch((error: Error) => {
+            const command = 'systemUpdate';
+            rpcErrorHandler({ componentName, error, command });
 
-            throw new Error(
-              `${componentName}: RPC error in command '${command}': ${error.toString()}`
-            )
-          })
+            throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
+        });
 
-        if (unbind) {
-          unbind()
-        }
-      }
-      await asyncSleep(300)
+        updateStage.value = 'Update in progress, pay attention to your Flipper';
+        await flipperStore.flipper?.RPC('systemReboot', { mode: 'UPDATE' }).catch((error: Error) => {
+            const command = 'systemReboot';
+            rpcErrorHandler({ componentName, error, command });
+
+            throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
+        });
+
+        flipperStore.flags.waitForReconnect = true;
+        flipperStore.flags.autoReconnect = true;
+    } else {
+        updateError.value = true;
+        updateStage.value = 'Failed to fetch channel';
+
+        showNotif({
+            message: 'Unable to load firmware channel from the build server.',
+            color: 'negative',
+            actions: [
+                {
+                    label: 'Reload',
+                    color: 'white',
+                    handler: () => location.reload()
+                }
+            ]
+        });
+        throw new Error(updateStage.value);
     }
-
-    write.value.filename = ''
-    write.value.progress = 0
-
-    updateStage.value = 'Loading manifest...'
-
-    if (updateError.value) {
-      return
-    }
-
-    await flipperStore.flipper
-      ?.RPC('systemUpdate', { path: path + '/update.fuf' })
-      .then(() =>
-        logger.debug({
-          context: componentName,
-          message: 'systemUpdate: OK'
-        })
-      )
-      .catch((error: Error) => {
-        const command = 'systemUpdate'
-        rpcErrorHandler({ componentName, error, command })
-
-        throw new Error(
-          `${componentName}: RPC error in command '${command}': ${error.toString()}`
-        )
-      })
-
-    updateStage.value = 'Update in progress, pay attention to your Flipper'
-
-    await flipperStore.flipper
-      ?.RPC('systemReboot', { mode: 'UPDATE' })
-      .catch((error: Error) => {
-        const command = 'systemReboot'
-        rpcErrorHandler({ componentName, error, command })
-
-        throw new Error(
-          `${componentName}: RPC error in command '${command}': ${error.toString()}`
-        )
-      })
-
-    flipperStore.flags.waitForReconnect = true
-    flipperStore.flags.autoReconnect = true
-  } else {
-    updateError.value = true
-
-    updateStage.value = 'Failed to fetch channel'
-
-    showNotif({
-      message: 'Unable to load firmware channel from the build server.',
-      color: 'negative',
-      actions: [
-        {
-          label: 'Reload',
-          color: 'white',
-          handler: () => {
-            location.reload()
-          }
-        }
-      ]
-    })
-    throw new Error(updateStage.value)
-  }
 }
 
 const cancelUpdate = () => {
-  flipperStore.flags.waitForReconnect = false
-  flipperStore.flags.updateInProgress = false
-  updateError.value = false
-  updateStage.value = ''
-  // reload()
+    flipperStore.flags.waitForReconnect = false;
+    flipperStore.flags.updateInProgress = false;
+    updateError.value = false;
+    updateStage.value = '';
+    // reload()
 }
 </script>
+<style>
+.dialog-wide .q-dialog__inner > div {
+    max-width: 960px;
+    width: 100%;
+}
+</style>

@@ -211,7 +211,7 @@ type FwOptionValue = {
 
 export type FwOptions = {
   release: FwOptionValue
-  rc: FwOptionValue
+  //rc: FwOptionValue
   dev: FwOptionValue
   custom?: FwOptionValue
 }
