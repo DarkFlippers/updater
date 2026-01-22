@@ -1,11 +1,12 @@
 <template>
-    <q-drawer class="menu-link bg-grey-2" show-if-above :width="175" :breakpoint="900" >
+    <q-drawer class="menu-link" style="background: #151515; color: #fff;" show-if-above :width="175" :breakpoint="900">
         <q-scroll-area class="fit">
             <q-tab-panels v-model="tab" class="fit bg-transparent" animated>
                 <q-tab-panel class="no-padding" name="home">
                     <q-list class="column fit justify-between no-wrap">
                         <div>
-                            <RouterLink v-for="link in linksList" :key="link.title" :disable="flipperStore.flags.disableNavigation" v-bind="link" />
+                            <RouterLink v-for="link in linksList" :key="link.title"
+                                :disable="flipperStore.flags.disableNavigation" v-bind="link" />
                         </div>
                         <q-space />
                         <q-item clickable @click="showSettingsMenu">

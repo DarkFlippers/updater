@@ -188,8 +188,6 @@ export default defineConfig((ctx) => {
       // registerServiceWorker: 'src-pwa/register-service-worker',
       // serviceWorker: 'src-pwa/custom-service-worker',
       // pwaManifestFile: 'src-pwa/manifest.json',
-      // electronMain: 'src-electron/electron-main',
-      preloadScripts: ['electron-preload']
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
@@ -224,88 +222,6 @@ export default defineConfig((ctx) => {
       // extendInjectManifestOptions (cfg) {},
       // extendManifestJson (json) {}
       // extendPWACustomSWConf (esbuildConf) {}
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
-    cordova: {
-      // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-capacitor-apps/configuring-capacitor
-    capacitor: {
-      hideSplashscreen: true
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/configuring-electron
-    electron: {
-      // extendElectronMainConf (esbuildConf)
-      // extendElectronPreloadConf (esbuildConf)
-
-      inspectPort: 5858,
-
-      bundler: 'builder', // 'packager' or 'builder'
-
-      packager: {
-        // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
-        arch: ['arm64', 'x64']
-        // OS X / Mac App Store
-        // appBundleId: '',
-        // appCategoryType: '',
-        // osxSign: '',
-        // protocol: 'myapp://path',
-        // Windows only
-        // win32metadata: { ... }
-      },
-
-      builder: {
-        // https://www.electron.build/configuration/configuration
-
-        appId: 'com.flipperdevices.lab',
-        artifactName: '${productName}-${version}-${arch}.${ext}',
-        compression: ctx.dev ? 'store' : 'maximum',
-        dmg: {
-          sign: false
-        },
-        publish: {
-          provider: 'github',
-          publishAutoUpdate: true
-        },
-        extraFiles: [
-          {
-            from: 'src-electron/extraResources/',
-            to: 'extraResources',
-            filter: ['**/*']
-          }
-        ],
-        linux: {
-          icon: 'src-electron/icons/icon.png',
-
-          target: ['AppImage', 'deb', 'rpm', 'pacman']
-        },
-        win: {
-          publisherName: 'Flipper Devices Inc.',
-
-          target: ['portable']
-        },
-        mac: {
-          category: 'public.app-category.utilities',
-          notarize: process.env.MACOS_NOTARIZATION_SKIP
-            ? false
-            : {
-                teamId: process.env.APPLE_TEAM_ID || ''
-              },
-
-          target: ['dmg']
-        }
-      }
-    },
-
-    // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
-    bex: {
-      extraScripts: ['my-content-script']
-
-      // extendBexScriptsConf (esbuildConf) {}
-      // extendBexManifestJson (json) {}
     }
   }
 })

@@ -1,12 +1,14 @@
 <template>
     <q-header>
         <q-toolbar>
-            <q-btn v-show="$q.screen.xs" flat dense round icon="menu" aria-label="Menu" @click="emit('toggleLeftDrawer')" />
+            <q-btn v-show="$q.screen.xs" flat dense round icon="menu" aria-label="Menu"
+                @click="emit('toggleLeftDrawer')" />
             <div v-if="!$q.screen.xs" class="text-h6 q-ml-xs text-bold">Unleashed Firmware Web Updater</div>
 
             <q-space />
 
-            <q-btn v-if="$q.screen.xs" @click="linksMenu = !linksMenu" icon="open_in_new" dense flat round class="q-ml-sm">
+            <q-btn v-if="$q.screen.xs" @click="linksMenu = !linksMenu" icon="open_in_new" dense flat round
+                class="q-ml-sm">
                 <q-menu fit>
                     <q-list class="nav-links nav-links__black">
                         <EssentialLink v-for="link in extLinks" :key="link.title" v-bind="link" />
@@ -15,7 +17,8 @@
             </q-btn>
             <template v-else>
                 <div class="nav-links">
-                    <a v-for="link in extLinks" :key="link.title" v-bind="link" :href="link.link" class="q-mx-sm" :target="link.blank ? '_blank' : '_self'">{{ link.title }}</a>
+                    <a v-for="link in extLinks" :key="link.title" v-bind="link" :href="link.link" class="q-mx-sm"
+                        :target="link.blank ? '_blank' : '_self'">{{ link.title }}</a>
                 </div>
             </template>
         </q-toolbar>
@@ -63,7 +66,7 @@ const linksMenu = ref(false);
 
     &__black {
         a {
-        color: #000000 !important;
+            color: #000000 !important;
         }
     }
 }

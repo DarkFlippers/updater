@@ -1,195 +1,147 @@
 <template>
-  <div class="column flex-center text-center">
-    <div class="flex justify-between items-center full-width q-mt-xs q-pb-md">
-      <p class="q-mb-none text-bold text-body1">Firmware Update</p>
-      <q-btn
-        v-if="fwModel.changelog.trim().length"
-        @click="
-          () => {
-            changelogDialog = true
-          }
-        "
-        outline
-        size="sm"
-        padding="xs md"
-        label="What's New"
-        icon="mdi-information-outline"
-        no-caps
-      />
-    </div>
-    <template v-if="ableToUpdate && flipperStore.info?.storage.sdcard?.status">
-      <p v-if="getChannel('custom')">
-        Detected custom firmware
-        <b v-if="getChannel('custom')!.title !== 'Custom'">
-          "{{ getChannel('custom')!.title }}"
-        </b>
-        <span v-if="!isTgzCustomFile || !isTargetCustomFile"> with </span>
-        <span v-if="!isTgzCustomFile"> <b>unsupported</b> filetype </span>
-        <span v-if="!isTgzCustomFile && !isTargetCustomFile"> and </span>
-        <span v-if="!isTargetCustomFile"> <b>unsupported</b> target </span>
-      </p>
-      <div class="column full-width">
-        <div class="flex no-wrap justify-between items-center">
-          <p class="q-mb-none">Update Channel</p>
-          <q-select
-            v-model="fwModel"
-            :options="Object.values(fwOptions)"
-            borderless
-            dense
-            :disable="flipperStore.flags.updateInProgress"
-          >
-            <!-- :style="!$q.screen.xs ? 'width: 320px;' : 'width: 290px;'" -->
-            <template v-slot:selected>
-              <p class="q-mb-none" :class="`text-${fwModel.color}`">
-                {{ fwModel.label }}
-                {{ fwModel.version }}
-              </p>
-            </template>
-
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps">
-                <q-item-section class="items-start q-mr-md">
-                  <q-item-label>{{ scope.opt.selectLabel }}</q-item-label>
-                  <q-item-label class="text-no-wrap" caption>{{
-                    scope.opt.selectDescription
-                  }}</q-item-label>
-                </q-item-section>
-                <q-item-section class="items-end">
-                  <q-chip
-                    :color="scope.opt.color"
-                    text-color="white"
-                    :label="scope.opt.version"
-                  />
-                </q-item-section>
-              </q-item>
-            </template>
-          </q-select>
+    <div class="column flex-center text-center">
+        <div class="flex justify-between items-center full-width q-mt-xs q-pb-md">
+            <p class="q-mb-none text-bold text-body1" style="color: white;">Firmware Update</p>
+            <q-btn v-if="fwModel.changelog.trim().length" @click="
+                () => {
+                    changelogDialog = true
+                }
+            " outline color="white" size="sm" padding="xs md" label="What's New" icon="mdi-information-outline"
+                no-caps />
         </div>
-        <div class="flex center">
-          <template v-if="!flipperStore.flags.updateInProgress">
-            <q-btn
-              v-if="fwModel"
-              @click="update()"
-              class="full-width q-mt-sm text-pixelated text-h5"
-              unelevated
-              color="positive"
-              padding="12px 30px"
-              >Install</q-btn
-            >
-          </template>
-          <template v-else>
-            <div class="column flex-center text-center full-width">
-              <p>{{ updateStage }}</p>
-              <q-btn
-                v-if="updateError"
-                outline
-                class="q-mt-md"
-                @click="cancelUpdate()"
-                >Cancel</q-btn
-              >
-              <ProgressBar
-                v-else-if="write.filename.length > 0"
-                class="full-width"
-                :title="write.filename"
-                :progress="write.progress"
-                color="positive"
-                trackColor="green-4"
-                size="56px"
-                interpolated
-              />
+        <template v-if="ableToUpdate && flipperStore.info?.storage.sdcard?.status">
+            <p style="color: white;" v-if="getChannel('custom')">
+                Detected custom firmware
+                <b v-if="getChannel('custom')!.title !== 'Custom'">
+                    "{{ getChannel('custom')!.title }}"
+                </b>
+                <span v-if="!isTgzCustomFile || !isTargetCustomFile"> with </span>
+                <span v-if="!isTgzCustomFile"> <b>unsupported</b> filetype </span>
+                <span v-if="!isTgzCustomFile && !isTargetCustomFile"> and </span>
+                <span v-if="!isTargetCustomFile"> <b>unsupported</b> target </span>
+            </p>
+            <div class="column full-width">
+                <div class="flex no-wrap justify-between items-center">
+                    <p class="q-mb-none" style="color: white;">Update Channel</p>
+                    <q-select v-model="fwModel" :options="Object.values(fwOptions)" borderless dense
+                        :disable="flipperStore.flags.updateInProgress">
+                        <!-- :style="!$q.screen.xs ? 'width: 320px;' : 'width: 290px;'" -->
+                        <template v-slot:selected>
+                            <p class="q-mb-none" :class="`text-${fwModel.color}`">
+                                {{ fwModel.label }}
+                                {{ fwModel.version }}
+                            </p>
+                        </template>
+
+                        <template v-slot:option="scope">
+                            <q-item style="background: #151515;" v-bind="scope.itemProps">
+                                <q-item-section class="items-start q-mr-md">
+                                    <q-item-label style="color: white;">{{ scope.opt.selectLabel }}</q-item-label>
+                                    <q-item-label style="color: white;" class="text-no-wrap" caption>{{
+                                        scope.opt.selectDescription }}</q-item-label>
+                                </q-item-section>
+                                <q-item-section class="items-end">
+                                    <q-chip :color="scope.opt.color" text-color="white" :label="scope.opt.version" />
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
+                </div>
+                <div class="flex no-wrap justify-between items-center">
+                    <p class="q-mb-none" style="color: white;">Firmware pack</p>
+                    <q-select v-model="fwPack" :options="Object.values(fwPacks)" borderless dense
+                        :disable="flipperStore.flags.updateInProgress">
+
+                        <template v-slot:selected>
+                            <p class="q-mb-none" style="color: white;">{{ fwPack.label }}</p>
+                        </template>
+
+                        <template v-slot:option="scope">
+                            <q-item style="background: #151515;" v-bind="scope.itemProps">
+                                <q-item-section class="items-start q-mr-md">
+                                    <q-item-label style="color: white;">{{ scope.opt.label }}</q-item-label>
+                                    <q-item-label style="color: white;" class="text-no-wrap" caption>{{
+                                        scope.opt.selectDescription
+                                        }}</q-item-label>
+                                </q-item-section>
+                            </q-item>
+                        </template>
+                    </q-select>
+                </div>
+                <div class="flex center">
+                    <template v-if="!flipperStore.flags.updateInProgress">
+                        <q-btn v-if="fwModel" @click="update()" class="full-width q-mt-sm text-pixelated text-h5"
+                            unelevated color="positive" padding="12px 30px">Install</q-btn>
+                    </template>
+                    <template v-else>
+                        <div class="column flex-center text-center full-width">
+                            <p style="color: white;">{{ updateStage }}</p>
+                            <q-btn v-if="updateError" outline class="q-mt-md" @click="cancelUpdate()">Cancel</q-btn>
+                            <ProgressBar v-else-if="write.filename.length > 0" class="full-width"
+                                :title="write.filename" :progress="write.progress" color="positive" trackColor="green-4"
+                                size="56px" interpolated />
+                        </div>
+                    </template>
+                </div>
             </div>
-          </template>
-        </div>
-      </div>
-      <q-btn
-        v-if="installFromFile"
-        @click="
-          () => {
-            uploadPopup = true
-            uploadedFile = undefined
-          }
-        "
-        :disable="flipperStore.flags.updateInProgress"
-        class="q-mt-lg"
-        outline
-        color="grey-8"
-      >
-        Install from file
-      </q-btn>
-    </template>
-    <template v-else>
-      <div class="flex center">
-        <span v-if="flipperStore.info?.storage.sdcard?.status"
-          >Your firmware doesn't support self-update. Install latest release
-          using <b>repair mode</b>.</span
-        >
-        <span v-else>Self-update is impossible without an SD card.</span>
-      </div>
-    </template>
+            <q-btn v-if="installFromFile" @click="
+                () => {
+                    uploadPopup = true
+                    uploadedFile = undefined
+                }
+            " :disable="flipperStore.flags.updateInProgress" class="q-mt-lg" outline color="grey-8">
+                Install from file
+            </q-btn>
+        </template>
+        <template v-else>
+            <div class="flex center" style="color: white;">
+                <span v-if="flipperStore.info?.storage.sdcard?.status">Your firmware doesn't support self-update.
+                    Install latest release
+                    using <b>repair mode</b>.</span>
+                <span v-else>Self-update is impossible without an SD card.</span>
+            </div>
+        </template>
 
-    <q-dialog v-model="uploadPopup">
-      <q-card>
-        <q-card-section class="q-pt-none">
-          <q-file
-            outlined
-            v-model="uploadedFile"
-            label="Drop or select files"
-            accept=".tgz"
-            class="q-pt-md"
-            :style="$q.screen.width > 380 ? 'width: 300px;' : ''"
-          >
-            <template v-slot:prepend>
-              <q-icon name="file_upload"></q-icon>
-            </template>
-          </q-file>
-        </q-card-section>
+        <q-dialog v-model="uploadPopup">
+            <q-card>
+                <q-card-section class="q-pt-none">
+                    <q-file outlined v-model="uploadedFile" label="Drop or select files" accept=".tgz" class="q-pt-md"
+                        :style="$q.screen.width > 380 ? 'width: 300px;' : ''">
+                        <template v-slot:prepend>
+                            <q-icon name="file_upload"></q-icon>
+                        </template>
+                    </q-file>
+                </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn
-            flat
-            label="Upload"
-            v-close-popup
-            @click="update(true)"
-          ></q-btn>
-          <q-btn flat label="Cancel" color="negative" v-close-popup></q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+                <q-card-actions align="right">
+                    <q-btn flat label="Upload" v-close-popup @click="update(true)"></q-btn>
+                    <q-btn flat label="Cancel" color="negative" v-close-popup></q-btn>
+                </q-card-actions>
+            </q-card>
+        </q-dialog>
 
-    <q-dialog v-model="changelogDialog" class="dialog-wide">
-      <q-layout view="HHH lpr FFF" container class="bg-white">
-        <q-header class="column flex-center q-py-sm bg-white text-black" reveal>
-          <p class="q-mb-none text-h5 text-bold">What's New</p>
-          <p class="q-mb-none" :class="`text-${fwModel.color}`">
-            {{ fwModel.label }}
-            {{ fwModel.version }}
-          </p>
-        </q-header>
-        <q-page-container>
-          <q-page padding>
-            <q-markdown
-              no-heading-anchor-links
-              no-linkify
-              no-typographer
-              :src="fwModel.changelog"
-            />
-          </q-page>
-        </q-page-container>
-        <q-footer class="bg-transparent">
-          <q-btn
-            class="full-width q-mt-sm text-pixelated text-h5"
-            v-close-popup
-            @click="update()"
-            :disable="flipperStore.flags.updateInProgress"
-            color="positive"
-            padding="12px 30px"
-            unelevated
-            >Install</q-btn
-          >
-        </q-footer>
-      </q-layout>
-    </q-dialog>
-  </div>
+        <q-dialog v-model="changelogDialog" class="dialog-wide">
+            <q-layout view="HHH lpr FFF" container class="bg-white">
+                <q-header class="column flex-center q-py-sm bg-white text-black" reveal>
+                    <p class="q-mb-none text-h5 text-bold">What's New</p>
+                    <p class="q-mb-none" :class="`text-${fwModel.color}`">
+                        {{ fwModel.label }}
+                        {{ fwModel.version }}
+                    </p>
+                </q-header>
+                <q-page-container>
+                    <q-page padding>
+                        <q-markdown no-heading-anchor-links no-linkify no-typographer :src="fwModel.changelog" />
+                    </q-page>
+                </q-page-container>
+                <q-footer class="bg-transparent">
+                    <q-btn class="full-width q-mt-sm text-pixelated text-h5" v-close-popup @click="update()"
+                        :disable="flipperStore.flags.updateInProgress" color="positive" padding="12px 30px"
+                        unelevated>Install</q-btn>
+                </q-footer>
+            </q-layout>
+        </q-dialog>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -248,6 +200,26 @@ const fwOptions = ref<FlipperModel.FwOptions>({
 });
 const fwModel = ref(fwOptions.value.release);
 
+const fwPacks = ref({
+    default: {
+        label: "Default",
+        selectDescription: "Base pack",
+        value: "default"
+    },
+    clean: {
+        label: "Clean",
+        selectDescription: "No apps",
+        value: "c"
+    },
+    extra: {
+        label: "Extra",
+        selectDescription: "Base + extra apps",
+        value: "e"
+    }
+})
+const fwPack = ref(fwPacks.value.default);
+const DONT_RUN_UPDATE_ON_FLIPPER = ref(false);
+
 const emit = defineEmits<{ (event: 'updateInProgress'): Promise<void> }>();
 
 onMounted(async () => {
@@ -272,11 +244,25 @@ onMounted(async () => {
 
     if (channels.value.length) {
         fwOptions.value.release.version = getChannel('release')?.versions[0]!.version || '';
-        // fwOptions.value.rc.version = getChannel('release-candidate')?.versions[0]!.version || '';
-        fwOptions.value.dev.version = getChannel('development')?.versions[0]!.version || '';
+        //fwOptions.value.rc.version = getChannel('release-candidate')?.versions[0]!.version || '';
+        //fwOptions.value.dev.version = getChannel('development')?.versions[0]!.version || '';
+
+        const firstVersion = getChannel('development')?.versions?.[0];
+        const updateFile = firstVersion?.files?.find(i => i.type === "update_tgz");
+
+        let version = "";
+
+        if (updateFile?.url && typeof updateFile.url === "string") {
+            const match = updateFile.url.match(/update-(\d+)\.tgz$/);
+            if (match) version = match[1]!;
+        }
+
+        if (!version && firstVersion?.version) version = firstVersion.version;
+
+        fwOptions.value.dev.version = version;
 
         fwOptions.value.release.changelog = replaceGitHubLinksInMarkdown(getChannel('release')?.versions[0]!.changelog || '');
-        // fwOptions.value.rc.changelog = replaceGitHubLinksInMarkdown(getChannel('release-candidate')?.versions[0]!.changelog || '');
+        //fwOptions.value.rc.changelog = replaceGitHubLinksInMarkdown(getChannel('release-candidate')?.versions[0]!.changelog || '');
         fwOptions.value.dev.changelog = replaceGitHubLinksInMarkdown(getChannel('development')?.versions[0]!.changelog || '');
 
         const customChannel = getChannel('custom');
@@ -349,10 +335,11 @@ const write = ref({
     progress: 0
 });
 const loadFirmware = async () => {
-    updateStage.value = 'Loading firmware bundle...'
+    updateStage.value = 'Loading firmware bundle...';
     if (updateError.value) return;
 
     const channel = getChannel(fwModel.value.value);
+    const pack = fwPack.value
 
     if (uploadedFile.value || channel) {
         let files;
@@ -366,7 +353,16 @@ const loadFirmware = async () => {
                 return value;
             });
         } else {
-            const file = channel?.versions[0]!.files.find(_file => _file.target === flipperStore.target && _file.type === 'update_tgz');
+            //const file = channel?.versions[0]!.files.find(_file => _file.target === flipperStore.target && _file.type === 'update_tgz');
+            let file = null;
+            const defaultFile = channel?.versions?.[0]?.files?.find(_file => _file.target === flipperStore.target && _file.type === 'update_tgz');
+            if (pack.value === 'default') file = defaultFile;
+            else {
+                file = {
+                    url: `https://unleashedflip.com/fw_extra_apps/flipper-z-${flipperStore.target}-update-${fwModel.value.version}${pack.value}.tgz`
+                }
+            }
+            if (!file?.url && defaultFile) file = defaultFile;
 
             if (file) {
                 files = await fetchFirmware(file.url).then((value) => {
@@ -393,7 +389,7 @@ const loadFirmware = async () => {
                     const message = `${componentName}: Failed to fetch firmware: ${error.toString()}`;
                     logger.error({
                         context: componentName,
-                         message
+                        message
                     });
                     throw new Error(message);
                 });
@@ -403,6 +399,7 @@ const loadFirmware = async () => {
         updateStage.value = 'Loading firmware files';
 
         if (updateError.value) return;
+        if (DONT_RUN_UPDATE_ON_FLIPPER.value) return cancelUpdate();
 
         let path = '/ext/update/';
         const updateDir = await flipperStore.flipper?.RPC('storageStat', { path: '/ext/update' }).catch(async (error: Error) => {
@@ -419,15 +416,15 @@ const loadFirmware = async () => {
 
         if (!updateDir) {
             await flipperStore.flipper?.RPC('storageMkdir', { path: '/ext/update' })
-            .then(() => logger.debug({
-                context: componentName,
-                message: 'storageMkdir: /ext/update'
-            })).catch((error: Error) => {
-                const command = 'storageMkdir';
-                rpcErrorHandler({ componentName, error, command });
+                .then(() => logger.debug({
+                    context: componentName,
+                    message: 'storageMkdir: /ext/update'
+                })).catch((error: Error) => {
+                    const command = 'storageMkdir';
+                    rpcErrorHandler({ componentName, error, command });
 
-                throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
-            });
+                    throw new Error(`${componentName}: RPC error in command '${command}': ${error.toString()}`);
+                });
         }
 
         for (const file of files) {
@@ -548,7 +545,7 @@ const cancelUpdate = () => {
 }
 </script>
 <style>
-.dialog-wide .q-dialog__inner > div {
+.dialog-wide .q-dialog__inner>div {
     max-width: 960px;
     width: 100%;
 }

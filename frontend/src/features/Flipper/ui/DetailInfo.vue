@@ -1,18 +1,10 @@
 <template>
   <div class="full-width">
-    <q-btn
-      class="full-width text-bold text-body1"
-      @click="showFullInfo"
-      flat
-      padding="xs 0 xs xs"
-      label="Device Info"
-      icon-right="mdi-chevron-right"
-      align="between"
-      no-caps
-    />
+    <q-btn class="full-width text-bold text-body1" color="white" @click="showFullInfo" flat padding="xs 0 xs xs"
+      label="Device Info" icon-right="mdi-chevron-right" align="between" no-caps />
 
     <q-dialog v-model="fullInfoDialog">
-      <q-card style="max-width: 375px">
+      <q-card style="max-width: 375px; background: #151515; color: white;">
         <q-card-section class="q-pb-none">
           <p class="q-mb-none text-h6 text-bold">Device Info</p>
         </q-card-section>
@@ -23,24 +15,16 @@
                 {{ infoBlock.title }}
               </p>
               <div class="column">
-                <template
-                  v-for="(value, index) in infoBlock.values"
-                  :key="value?.label"
-                >
+                <template v-for="(value, index) in infoBlock.values" :key="value?.label">
                   <template v-if="value">
                     <p class="q-my-xs row no-wrap justify-between items-center">
-                      <span class="text-weight-medium text-no-wrap q-mr-xl"
-                        >{{ value?.label }}:</span
-                      >
+                      <span class="text-weight-medium text-no-wrap q-mr-xl">{{ value?.label }}:</span>
                       <span class="text-right text-mono">{{
                         value?.value.replace(/\//g, '/&#8203;')
                       }}</span>
                     </p>
-                    <div
-                      v-show="index !== infoBlock.values.length - 1"
-                      class="full-width bg-grey-3"
-                      style="height: 1px"
-                    />
+                    <div v-show="index !== infoBlock.values.length - 1" class="full-width bg-grey-3"
+                      style="height: 1px" />
                   </template>
                 </template>
               </div>

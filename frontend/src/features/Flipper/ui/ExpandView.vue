@@ -1,222 +1,137 @@
 <template>
   <q-dialog class="expandView" @show="showDialog" @hide="hideDialog">
-    <q-card
-      ref="expandViewCard"
-      class="expandView__wrapper full-width column rounded-borders"
-      style="min-width: fit-content"
-    >
+    <q-card ref="expandViewCard" class="expandView__wrapper full-width column rounded-borders"
+      style="min-width: fit-content">
       <span class="scanLine absolute fit" />
-      <canvas
-        ref="gridBackground"
-        class="absolute-center"
-        style="opacity: 0.15"
-      />
+      <canvas ref="gridBackground" class="absolute-center" style="opacity: 0.15" />
       <q-card-section class="row col items-center justify-center q-pa-xl">
         <div class="row justify-center items-center">
-          <div
-            class="relative-position bg-primary q-pa-sm rounded-borders q-mr-lg"
-            style="border: 3px solid #9e5823"
-          >
-            <canvas
-              :width="128 * screenScale"
-              :height="64 * screenScale"
-              style="image-rendering: pixelated"
-              :style="`rotate: ${
-                90 * rotationCalculation
-              }deg; scale: ${scaleCalculation};`"
-              ref="screenStreamExpandCanvas"
-            />
+          <div class="relative-position q-pa-sm rounded-borders q-mr-lg"
+            style="border: 3px solid #9e5823; background: #ff8200;">
+            <canvas :width="128 * screenScale" :height="64 * screenScale" style="image-rendering: pixelated" :style="`rotate: ${90 * rotationCalculation
+              }deg; scale: ${scaleCalculation};`" ref="screenStreamExpandCanvas" />
           </div>
           <div class="controls column items-end">
             <div class="controls__dpad dpad q-mb-md">
-              <FlipperKeypadButton
-                class="dpad__top"
-                icon="flipper:control-triangle"
-                iconHover="flipper:control-triangle-hover"
-                iconActive="flipper:control-triangle-down"
-                size="32px"
+              <FlipperKeypadButton class="dpad__top" icon="flipper:control-triangle"
+                iconHover="flipper:control-triangle-hover" iconActive="flipper:control-triangle-down" size="32px"
                 @onLongPress="
                   onInputEvent({
                     key: 'UP',
                     type: 'LONG'
                   })
-                "
-                @onShortPress="
-                  onInputEvent({
-                    key: 'UP',
-                    type: 'SHORT'
-                  })
-                "
-                @onRepeat="
-                  onInputEvent({
-                    key: 'UP',
-                    type: 'REPEAT'
-                  })
-                "
-                :keys="['ArrowUp', 'KeyW']"
-              />
-              <FlipperKeypadButton
-                class="dpad__right"
-                icon="flipper:control-triangle"
-                iconHover="flipper:control-triangle-hover"
-                iconActive="flipper:control-triangle-down"
-                size="32px"
+                  " @onShortPress="
+                    onInputEvent({
+                      key: 'UP',
+                      type: 'SHORT'
+                    })
+                    " @onRepeat="
+                      onInputEvent({
+                        key: 'UP',
+                        type: 'REPEAT'
+                      })
+                      " :keys="['ArrowUp', 'KeyW']" />
+              <FlipperKeypadButton class="dpad__right" icon="flipper:control-triangle"
+                iconHover="flipper:control-triangle-hover" iconActive="flipper:control-triangle-down" size="32px"
                 @onLongPress="
                   onInputEvent({
                     key: 'RIGHT',
                     type: 'LONG'
                   })
-                "
-                @onShortPress="
-                  onInputEvent({
-                    key: 'RIGHT',
-                    type: 'SHORT'
-                  })
-                "
-                @onRepeat="
-                  onInputEvent({
-                    key: 'RIGHT',
-                    type: 'REPEAT'
-                  })
-                "
-                :keys="['ArrowRight', 'KeyD']"
-              />
-              <FlipperKeypadButton
-                class="dpad__bottom"
-                icon="flipper:control-triangle"
-                iconHover="flipper:control-triangle-hover"
-                iconActive="flipper:control-triangle-down"
-                size="32px"
+                  " @onShortPress="
+                    onInputEvent({
+                      key: 'RIGHT',
+                      type: 'SHORT'
+                    })
+                    " @onRepeat="
+                      onInputEvent({
+                        key: 'RIGHT',
+                        type: 'REPEAT'
+                      })
+                      " :keys="['ArrowRight', 'KeyD']" />
+              <FlipperKeypadButton class="dpad__bottom" icon="flipper:control-triangle"
+                iconHover="flipper:control-triangle-hover" iconActive="flipper:control-triangle-down" size="32px"
                 @onLongPress="
                   onInputEvent({
                     key: 'DOWN',
                     type: 'LONG'
                   })
-                "
-                @onShortPress="
-                  onInputEvent({
-                    key: 'DOWN',
-                    type: 'SHORT'
-                  })
-                "
-                @onRepeat="
-                  onInputEvent({
-                    key: 'DOWN',
-                    type: 'REPEAT'
-                  })
-                "
-                :keys="['ArrowDown', 'KeyS']"
-              />
-              <FlipperKeypadButton
-                class="dpad__left"
-                icon="flipper:control-triangle"
-                iconHover="flipper:control-triangle-hover"
-                iconActive="flipper:control-triangle-down"
-                size="32px"
+                  " @onShortPress="
+                    onInputEvent({
+                      key: 'DOWN',
+                      type: 'SHORT'
+                    })
+                    " @onRepeat="
+                      onInputEvent({
+                        key: 'DOWN',
+                        type: 'REPEAT'
+                      })
+                      " :keys="['ArrowDown', 'KeyS']" />
+              <FlipperKeypadButton class="dpad__left" icon="flipper:control-triangle"
+                iconHover="flipper:control-triangle-hover" iconActive="flipper:control-triangle-down" size="32px"
                 @onLongPress="
                   onInputEvent({
                     key: 'LEFT',
                     type: 'LONG'
                   })
-                "
-                @onShortPress="
-                  onInputEvent({
-                    key: 'LEFT',
-                    type: 'SHORT'
-                  })
-                "
-                @onRepeat="
-                  onInputEvent({
-                    key: 'LEFT',
-                    type: 'REPEAT'
-                  })
-                "
-                :keys="['ArrowLeft', 'KeyA']"
-              />
-              <FlipperKeypadButton
-                class="dpad__center"
-                icon="flipper:control-circle"
-                iconHover="flipper:control-circle-hover"
-                iconActive="flipper:control-circle-down"
-                size="52px"
+                  " @onShortPress="
+                    onInputEvent({
+                      key: 'LEFT',
+                      type: 'SHORT'
+                    })
+                    " @onRepeat="
+                      onInputEvent({
+                        key: 'LEFT',
+                        type: 'REPEAT'
+                      })
+                      " :keys="['ArrowLeft', 'KeyA']" />
+              <FlipperKeypadButton class="dpad__center" icon="flipper:control-circle"
+                iconHover="flipper:control-circle-hover" iconActive="flipper:control-circle-down" size="52px"
                 @onLongPress="
                   onInputEvent({
                     key: 'OK',
                     type: 'LONG'
                   })
-                "
-                @onShortPress="
-                  onInputEvent({
-                    key: 'OK',
-                    type: 'SHORT'
-                  })
-                "
-                @onRepeat="
-                  onInputEvent({
-                    key: 'OK',
-                    type: 'REPEAT'
-                  })
-                "
-                :keys="['Space', 'Enter']"
-              />
+                  " @onShortPress="
+                    onInputEvent({
+                      key: 'OK',
+                      type: 'SHORT'
+                    })
+                    " @onRepeat="
+                      onInputEvent({
+                        key: 'OK',
+                        type: 'REPEAT'
+                      })
+                      " :keys="['Space', 'Enter']" />
             </div>
-            <FlipperKeypadButton
-              icon="flipper:control-back"
-              iconHover="flipper:control-back-hover"
-              iconActive="flipper:control-back-down"
-              size="52px"
-              @onLongPress="
+            <FlipperKeypadButton icon="flipper:control-back" iconHover="flipper:control-back-hover"
+              iconActive="flipper:control-back-down" size="52px" @onLongPress="
                 onInputEvent({
                   key: 'BACK',
                   type: 'LONG'
                 })
-              "
-              @onShortPress="
-                onInputEvent({
-                  key: 'BACK',
-                  type: 'SHORT'
-                })
-              "
-              @onRepeat="
-                onInputEvent({
-                  key: 'BACK',
-                  type: 'REPEAT'
-                })
-              "
-              :keys="['Backspace']"
-            />
+                " @onShortPress="
+                  onInputEvent({
+                    key: 'BACK',
+                    type: 'SHORT'
+                  })
+                  " @onRepeat="
+                    onInputEvent({
+                      key: 'BACK',
+                      type: 'REPEAT'
+                    })
+                    " :keys="['Backspace']" />
           </div>
         </div>
       </q-card-section>
       <q-card-actions class="items-end q-pa-md" align="between">
-        <q-btn
-          outline
-          label="Back"
-          icon="flipper:chevron-left"
-          color="primary"
-          @click="hideDialog"
-          v-close-popup
-        />
-        <q-btn
-          outline
-          label="Save screenshot"
-          icon="flipper:save-symbolic"
-          color="primary"
-          @click="saveImage()"
-        />
+        <q-btn outline label="Back" icon="flipper:chevron-left" class="flippr" @click="hideDialog" v-close-popup />
+        <q-btn outline label="Save screenshot" icon="flipper:save-symbolic" class="flippr" @click="saveImage()" />
         <div class="column items-end">
-          <q-btn flat padding="sm" icon="flipper:info-big" color="primary">
-            <q-tooltip
-              class="controlHelp"
-              anchor="bottom right"
-              self="top right"
-              :offset="[16, 20]"
-              style="border: 1px solid #662c00; background: #210f00"
-            >
-              <q-icon
-                name="flipper:steaming-help-mac"
-                style="width: 207px; height: 102px"
-              />
+          <q-btn flat padding="sm" icon="flipper:info-big" class="flippr">
+            <q-tooltip class="controlHelp" anchor="bottom right" self="top right" :offset="[16, 20]"
+              style="border: 1px solid #662c00; background: #210f00">
+              <q-icon name="flipper:steaming-help-mac" style="width: 207px; height: 102px" />
             </q-tooltip>
           </q-btn>
         </div>
@@ -488,4 +403,8 @@ const hideDialog = () => {
 
 <style lang="scss" scoped>
 @import 'styles';
+
+.flippr {
+  color: #ff8200;
+}
 </style>

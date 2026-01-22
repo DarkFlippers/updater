@@ -1,1 +1,1 @@
-export { default as DevicePage } from './Device.vue'
+export { default as DevicePage } from './Device.vue';
