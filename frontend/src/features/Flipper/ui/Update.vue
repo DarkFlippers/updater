@@ -1,7 +1,7 @@
 <template>
     <div class="column flex-center text-center">
         <div class="flex justify-between items-center full-width q-mt-xs q-pb-md">
-            <p class="q-mb-none text-bold text-body1" style="color: white;">Firmware Update</p>
+            <p class="q-mb-none text-bold text-body1">Firmware Update</p>
             <q-btn v-if="fwModel.changelog.trim().length" @click="
                 () => {
                     changelogDialog = true
@@ -10,7 +10,7 @@
                 no-caps />
         </div>
         <template v-if="ableToUpdate && flipperStore.info?.storage.sdcard?.status">
-            <p style="color: white;" v-if="getChannel('custom')">
+            <p v-if="getChannel('custom')">
                 Detected custom firmware
                 <b v-if="getChannel('custom')!.title !== 'Custom'">
                     "{{ getChannel('custom')!.title }}"
@@ -22,7 +22,7 @@
             </p>
             <div class="column full-width">
                 <div class="flex no-wrap justify-between items-center">
-                    <p class="q-mb-none" style="color: white;">Update Channel</p>
+                    <p class="q-mb-none">Update Channel</p>
                     <q-select v-model="fwModel" :options="Object.values(fwOptions)" borderless dense
                         :disable="flipperStore.flags.updateInProgress">
                         <!-- :style="!$q.screen.xs ? 'width: 320px;' : 'width: 290px;'" -->
@@ -36,8 +36,9 @@
                         <template v-slot:option="scope">
                             <q-item style="background: #151515;" v-bind="scope.itemProps">
                                 <q-item-section class="items-start q-mr-md">
-                                    <q-item-label style="color: white;">{{ scope.opt.selectLabel }}</q-item-label>
-                                    <q-item-label style="color: white;" class="text-no-wrap" caption>{{
+                                    <q-item-label :class="`text-${scope.opt.color}`">{{ scope.opt.selectLabel
+                                    }}</q-item-label>
+                                    <q-item-label class="text-no-wrap text-white" caption>{{
                                         scope.opt.selectDescription }}</q-item-label>
                                 </q-item-section>
                                 <q-item-section class="items-end">
@@ -48,19 +49,19 @@
                     </q-select>
                 </div>
                 <div class="flex no-wrap justify-between items-center">
-                    <p class="q-mb-none" style="color: white;">Firmware pack</p>
+                    <p class="q-mb-none">Firmware pack</p>
                     <q-select v-model="fwPack" :options="Object.values(fwPacks)" borderless dense
                         :disable="flipperStore.flags.updateInProgress">
 
                         <template v-slot:selected>
-                            <p class="q-mb-none" style="color: white;">{{ fwPack.label }}</p>
+                            <p class="q-mb-none text-white">{{ fwPack.label }}</p>
                         </template>
 
                         <template v-slot:option="scope">
                             <q-item style="background: #151515;" v-bind="scope.itemProps">
                                 <q-item-section class="items-start q-mr-md">
-                                    <q-item-label style="color: white;">{{ scope.opt.label }}</q-item-label>
-                                    <q-item-label style="color: white;" class="text-no-wrap" caption>{{
+                                    <q-item-label class="text-white">{{ scope.opt.label }}</q-item-label>
+                                    <q-item-label class="text-no-wrap text-white" caption>{{
                                         scope.opt.selectDescription
                                         }}</q-item-label>
                                 </q-item-section>
@@ -75,7 +76,7 @@
                     </template>
                     <template v-else>
                         <div class="column flex-center text-center full-width">
-                            <p style="color: white;">{{ updateStage }}</p>
+                            <p>{{ updateStage }}</p>
                             <q-btn v-if="updateError" outline class="q-mt-md" @click="cancelUpdate()">Cancel</q-btn>
                             <ProgressBar v-else-if="write.filename.length > 0" class="full-width"
                                 :title="write.filename" :progress="write.progress" color="positive" trackColor="green-4"
@@ -94,7 +95,7 @@
             </q-btn>
         </template>
         <template v-else>
-            <div class="flex center" style="color: white;">
+            <div class="flex center">
                 <span v-if="flipperStore.info?.storage.sdcard?.status">Your firmware doesn't support self-update.
                     Install latest release
                     using <b>repair mode</b>.</span>
@@ -130,7 +131,7 @@
                     </p>
                 </q-header>
                 <q-page-container>
-                    <q-page padding>
+                    <q-page padding class="bg-white text-black">
                         <q-markdown no-heading-anchor-links no-linkify no-typographer :src="fwModel.changelog" />
                     </q-page>
                 </q-page-container>
@@ -548,5 +549,9 @@ const cancelUpdate = () => {
 .dialog-wide .q-dialog__inner>div {
     max-width: 960px;
     width: 100%;
+}
+
+.q-select__dropdown-icon {
+    color: white;
 }
 </style>

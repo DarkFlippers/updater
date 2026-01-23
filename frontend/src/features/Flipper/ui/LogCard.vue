@@ -1,5 +1,5 @@
 <template>
-  <q-card class="card" :flat="flat" :class="{ dialog: isDialog }">
+  <q-card class="card bg-white text-black" :flat="flat" :class="{ dialog: isDialog }">
     <q-card-section class="row items-center q-pb-none">
       <h6 class="q-ma-none">Logs</h6>
       <q-space />
@@ -7,16 +7,12 @@
     </q-card-section>
 
     <q-card-section>
-      <div
-        style="height: 300px; min-width: 280px; width: 100%"
-        class="bg-grey-12 q-pa-xs rounded-borders"
-      >
+      <div style="height: 300px; min-width: 280px; width: 100%" class="bg-grey-12 q-pa-xs rounded-borders">
         <q-scroll-area ref="scrollArea" class="fit">
           <code v-if="!history.length">Logs will appear here...</code>
           <code v-for="line in history" :key="line.timestamp">
             {{
-              `${line.time.padEnd(8)} [${line.level.toUpperCase()}] [${
-                line.context
+              `${line.time.padEnd(8)} [${line.level.toUpperCase()}] [${line.context
               }] ${line.message}`
             }}
             <br />

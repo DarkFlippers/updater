@@ -1,5 +1,5 @@
 <template>
-    <q-drawer class="menu-link" style="background: #151515; color: #fff;" show-if-above :width="175" :breakpoint="900">
+    <q-drawer class="menu-link" style="background: #151515;" show-if-above :width="175" :breakpoint="900">
         <q-scroll-area class="fit">
             <q-tab-panels v-model="tab" class="fit bg-transparent" animated>
                 <q-tab-panel class="no-padding" name="home">

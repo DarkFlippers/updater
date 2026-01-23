@@ -1,6 +1,6 @@
 <template>
     <div class="column items-center">
-        <h5 class="q-mb-md q-mt-none text-bold" style="color: white;">{{ props.flipperName }}</h5>
+        <h5 class="q-mb-md q-mt-none text-bold">{{ props.flipperName }}</h5>
         <div class="flipper relative-position body-white">
             <img v-if="showScreenUpdating" class="flipper__image" src="~/assets/flipper-screen-updating.png" style="" />
             <div v-else class="flipper__display-wrapper relative-position"

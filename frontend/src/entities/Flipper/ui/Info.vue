@@ -1,5 +1,5 @@
 <template>
-    <div class="info" style="color: white;">
+    <div class="info">
         <p>
             <span>Firmware:</span>
             <span>{{ firmwareVersion }}</span>
