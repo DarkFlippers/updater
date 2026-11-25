@@ -106,7 +106,7 @@
         <q-dialog v-model="uploadPopup">
             <q-card>
                 <q-card-section class="q-pt-none">
-                    <q-file outlined v-model="uploadedFile" label="Drop or select files" accept=".tgz" class="q-pt-md"
+                    <q-file dark outlined v-model="uploadedFile" label="Drop or select files" accept=".tgz" class="q-pt-md"
                         :style="$q.screen.width > 380 ? 'width: 300px;' : ''">
                         <template v-slot:prepend>
                             <q-icon name="file_upload"></q-icon>

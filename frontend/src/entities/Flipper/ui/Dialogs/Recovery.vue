@@ -41,7 +41,7 @@
           label="View logs"
         >
           <div
-            class="full-width bg-grey-12 q-px-sm q-py-xs rounded-borders"
+            class="full-width bg-grey-12 text-black q-px-sm q-py-xs rounded-borders"
             style="height: 300px"
           >
             <q-scroll-area ref="scrollAreaRef" class="fit text-left">
